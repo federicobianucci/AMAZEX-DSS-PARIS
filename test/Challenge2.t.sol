@@ -81,7 +81,6 @@ contract Challenge2Test is Test {
         }
         exploiter1.withdraw();
         exploiter2.withdraw();
-
         //==================================================//
         vm.stopPrank();
 

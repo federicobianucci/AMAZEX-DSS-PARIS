@@ -38,7 +38,6 @@ contract Challenge1Test is Test {
         mETH.burnFrom(exploiter, 0);
         mETH.transferFrom(exploiter, whitehat, 1000 ether);
         mETH.withdraw(1000 ether);
-
         //==================================================//
         vm.stopPrank();
 

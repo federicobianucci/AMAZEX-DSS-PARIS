@@ -15,8 +15,6 @@ import {LendExGovernor} from "../src/3_LendingPool/LendExGovernor.sol";
 //    If you need a contract for your hack, define it below //
 ////////////////////////////////////////////////////////////*/
 
-
-
 /*////////////////////////////////////////////////////////////
 //                     TEST CONTRACT                        //
 ////////////////////////////////////////////////////////////*/
@@ -71,10 +69,8 @@ contract Challenge3Test is Test {
         // terminal command to run the speciffic test:                        //
         // forge test --match-contract Challenge3Test -vvvv                   //
         //////////////////////////////////////////////////////////////////////*/
-
-
-
-    
+        createDeployer.cleanUp();
+        lendingPool.emergencyStop();
         //====================================================================//
         vm.stopPrank();
     }
@@ -88,10 +84,9 @@ contract Challenge3Test is Test {
         // terminal command to run the specific test:                 //
         // forge test --match-contract Challenge3Test -vvvv           //
         //////////////////////////////////////////////////////////////*/
-
-
-
-
+        createDeployer = CreateDeployer(create2Deployer.deploy());
+        lendingHack = LendingHack(createDeployer.deploy(false, address(usdc)));
+        // lendingHack.withdraw();
         //=============================================================//
         vm.stopPrank();
 
