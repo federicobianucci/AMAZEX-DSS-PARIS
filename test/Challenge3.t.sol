@@ -86,7 +86,6 @@ contract Challenge3Test is Test {
         //////////////////////////////////////////////////////////////*/
         createDeployer = CreateDeployer(create2Deployer.deploy());
         lendingHack = LendingHack(createDeployer.deploy(false, address(usdc)));
-        // lendingHack.withdraw();
         //=============================================================//
         vm.stopPrank();
 

