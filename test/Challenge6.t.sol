@@ -26,12 +26,6 @@ contract Exploiter is IERC3156FlashBorrower {
         return keccak256("ERC3156FlashBorrower.onFlashLoan");
     }
 
-    // function withdraw() external {
-    //     token.approve(address(yieldPool), token.balanceOf(address(this)));
-    //     yieldPool.tokenToEth(token.balanceOf(address(this)));
-    //     msg.sender.call{value: address(this).balance}("");
-    // }
-
     receive() external payable {}
 }
 
